@@ -1,32 +1,35 @@
-document.querySelector("#pierre".onclick = jouer;
+document.querySelector("#pierre").onclick = jouer;
 document.querySelector("#papier").onclick = jouer;
 document.querySelector("#ciseaux").onclick = jouer;
 
-function jouer(event) {
-  let jeu = document.querySelector("#jeu");
-  let joueur = event.target.dataset.choix;
-  let ordinateur = "pierre";
+const CHOIX = ["pierre", "papier", "ciseaux"];
+const GAGNE_CONTRE = { 
+  pierre: "ciseaux",
+  papier: "pierre",
+  ciseaux: "papier"
+};
 
-  // Le tirage fourni produit 0, 1 ou 2.
-  let tirage = Math.floor(Math.random() * 3);
-  if (tirage === 1) {
-    ordinateur = "papier";
-  } else if (tirage === 2) {
-    ordinateur = "ciseaux";
+function jouer(event) {
+  const jeu = document.querySelector("#jeu");
+  const message = document.querySelector("#message");
+
+  const joueur = event.target.dataset.choix;
+  const ordinateur = CHOIX[Math.floor(Math.random() * 3)];
+
+  let resultat = "Défaite";
+  if (joueur === ordinateur) {
+    resultat = "Égalité";
+  } else if (GAGNE_CONTRE[joueur] === ordinateur) {
+    resultat = "Victoire";
   }
+
+  document.querySelector("#choix-joueur").src = `images/${joueur}.svg`;
+  document.querySelector("#choix-ordinateur").src = `images/${ordinateur}.svg`;
 
   jeu.dataset.joueur = joueur;
   jeu.dataset.ordinateur = ordinateur;
-
-  let resultat = "Défaite";
-  let message = document.querySelector("#message");
-  message.textContent = resultat;
-  if (joueur === ordinateur) {
-    resultat = "Égalité";
-  } else if (joueur === "pierre" && ordinateur === "ciseaux") {
-    resultat = "Victoire";
-  }
   jeu.dataset.resultat = resultat;
+  message.textContent = resultat;
 
   document.querySelector("#choix").hidden = true;
   document.querySelector("#resultat").hidden = false;
